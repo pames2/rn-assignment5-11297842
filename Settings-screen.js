@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ToggleSwitch from 'toggle-switch-react-native';
-
+import { useDarkMode } from './DarkModeContext';
 
 const settingsData = [
   { id: '1', label: 'Language', icon: 'chevron-forward-outline', screen: 'Language' },
@@ -12,13 +12,16 @@ const settingsData = [
   { id: '5', label: 'Privacy Policy', icon: 'chevron-forward-outline', screen: 'PrivacyPolicy' },
 ];
 
-export default function SettingsScreen({ navigation, isDarkMode, toggleDarkMode }) {
-  const renderItem = React.memo(({ item }) => (
+export default function Settings() {
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const styles = getStyles(isDarkMode);
+
+  const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.item} onPress={() => navigation.navigate(item.screen)}>
       <Text style={styles.label}>{item.label}</Text>
-      <Ionicons name={item.icon} size={20} color={isDarkMode ? '#fff' : '#161622'} />
+      <Ionicons name={item.icon} size={20} color={isDarkMode ? "#fff" : "#161622"} />
     </TouchableOpacity>
-  ));
+  );
 
   return (
     <View style={styles.container}>
@@ -28,8 +31,7 @@ export default function SettingsScreen({ navigation, isDarkMode, toggleDarkMode 
         renderItem={renderItem}
         keyExtractor={item => item.id}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        contentContainerStyle={{ paddingBottom: 250 }}
-      />
+      /> 
       <ToggleSwitch
         isOn={isDarkMode}
         onColor="green"
@@ -38,22 +40,22 @@ export default function SettingsScreen({ navigation, isDarkMode, toggleDarkMode 
         labelStyle={{ color: isDarkMode ? '#fff' : '#161622', fontSize: 20, marginRight: 50 }}
         size="large"
         onToggle={toggleDarkMode}
-        style={{ marginBottom: 50, flexDirection: 'row', alignItems: 'center' }}
+        style={{ marginBottom: 250, flexDirection: 'row', alignItems: 'center' }}
       />
     </View>
   );
 }
 
-const getStyles = () => StyleSheet.create({
+const getStyles = (darkMode) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'#fff',
+    backgroundColor: darkMode ? '#161622' : '#fff',
     paddingTop: 50,
   },
   text: {
-    color: '#000',
+    color: darkMode ? '#fff' : '#000',
     marginBottom: 20,
   },
   header: {
@@ -62,7 +64,7 @@ const getStyles = () => StyleSheet.create({
     textAlign: 'center',
     marginVertical: 20,
     marginBottom: 70,
-    color: '#161622',
+    color: darkMode ? '#fff' : '#161622',
   },
   item: {
     flexDirection: 'row',
@@ -72,7 +74,7 @@ const getStyles = () => StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#161622',
+    color: darkMode ? '#fff' : '#161622',
     marginRight: 50,
   },
   separator: {
